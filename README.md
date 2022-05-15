@@ -6,9 +6,31 @@ This code is a solution for the below problem:
 
 The Ledger Co
 
-The Challenge
+# Description
 
 You work at a startup called The Ledger Co., a marketplace for banks to lend money to borrowers and receive payments for the loans. The interest for the loan is calculated by I = P*N*R where P is the principal amount, N is the number of years and R is the rate of interest. The total amount to repay will be A = P + I The amount should be paid back monthly in the form of EMIs. The borrowers can also pay a lump sum (that is, an amount more than their monthly EMI). In such a case, the lump sum will be deducted from the total amount (A) which can reduce the number of EMIs. This doesn’t affect the EMI amount unless the remaining total amount is less than the EMI. All transactions happen through The Ledger Co. You need to design a system to find out how much amount a user has paid the bank and how many EMIs are remaining.
+
+## Requirements
+
+The project is built using Java 1.8. It uses Maven as the build system.
+
+1. Javascript
+
+## Running Tests
+
+The `npm start` command runs the test from sample input
+
+```
+npm start
+```
+
+The `npm run watch` command runs the test from sample input2 and runs it is watch mode. This is useful while development to continuously watch the changes.
+
+```
+npm start
+```
+
+## More details about the challenge
 
 Your program should take as input:
 
