@@ -18,7 +18,7 @@ The project is built using Java 1.8. It uses Maven as the build system.
 
 ## Running Tests
 
-The `npm start` command runs the test from sample input
+The `npm start` command runs the test from sample input which requires an absolute path to the test input file as a parameter while running the test case.
 
 ```
 npm start
