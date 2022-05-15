@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node geektrust.js ./sample_input/input1.txt",
     "test": "mocha",
-    "watch": "watch 'node geektrust.js ./sample_input/input1.txt'"
+    "watch": "watch 'node geektrust.js ./sample_input/input2.txt'"
   },
   "author": "geektrust",
   "license": "ISC",

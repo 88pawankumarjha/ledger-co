@@ -10,7 +10,6 @@ fs.readFile(filename, 'utf8', (err, data) => {
 
 const loans = [];
 const payments = [];
-const balance = [];
 
 const processLine = (inputLine) => {
   const inputType = inputLine.split(' ')[0];
@@ -30,7 +29,6 @@ const processLine = (inputLine) => {
 };
 
 const processLoan = (inputLine) => {
-  // const [loan, bank_name, borrower_name, principal, no_of_years, rate_of_interest] = inputLine.split(" ")
   loans.push(inputLine);
 };
 
@@ -40,37 +38,71 @@ const processPayment = (inputLine) => {
 };
 
 const processBalance = (inputLine) => {
-  const [balance, bank_name, borrower_name, emi_no] = inputLine.split(' ');
-  const [
-    loan,
-    bank_name_loan,
-    borrower_name_loan,
-    principal,
-    no_of_years,
-    rate_of_interest,
-  ] = getLoansByBorrowerName(borrower_name).split(' ');
+  const [, bank_name, borrower_name, emi_no] = inputLine.split(' ');
+  const [, , , principal, no_of_years, rate_of_interest] =
+    getLoansByBorrowerName(borrower_name).split(' ');
 
+  let paymentsByBorrower = [];
+  paymentsByBorrower = getPaymentsByBorrowerName(borrower_name);
   const interest = (principal * no_of_years * rate_of_interest) / 100;
   const amount = parseInt(interest) + parseInt(principal);
-
   const total_emi = no_of_years * 12;
-  const no_of_emis_left = total_emi - emi_no;
-  const emi = Math.ceil(amount / 12);
-  const amount_paid = emi * emi_no;
 
-  console.log(
-    bank_name,
-    ' ',
-    borrower_name,
-    ' ',
-    amount_paid,
-    ' ',
-    no_of_emis_left
-  );
+  if (paymentsByBorrower.length == 0) {
+    const no_of_emis_left = total_emi - emi_no;
+    const emi = Math.ceil(amount / total_emi);
+    const amount_paid = Math.min(amount, emi * emi_no);
+    console.log(
+      bank_name,
+      ' ',
+      borrower_name,
+      ' ',
+      amount_paid,
+      ' ',
+      no_of_emis_left
+    );
+  } else {
+    const [, , borrower_name, lump_sum_amount, payment_emi_no] =
+      paymentsByBorrower[0].split(' ');
+    const emi = Math.ceil(amount / total_emi);
+    let amount_paid = '';
+    if (payment_emi_no <= emi_no) {
+      const amount_paid_before_payment = emi * payment_emi_no;
+      const reduced_amount_to_be_paid =
+        amount - (amount_paid_before_payment + parseInt(lump_sum_amount));
+      let updated_no_of_emis_left = Math.ceil(reduced_amount_to_be_paid / emi);
+      amount_paid =
+        amount_paid_before_payment +
+        parseInt(lump_sum_amount) +
+        emi * (emi_no - payment_emi_no);
+      updated_no_of_emis_left = Math.ceil((amount - amount_paid) / emi);
 
-  // const paid_EMI = (loans[name_b]['P']*loans[name_b]['N']*loans[name_b]['R']+
-  //             loans[name_b]['P'])*int(EMI)/(loans[name_b]['N']*12)
-  // const left_EMI = loans[name_b]['N']*12 - int(EMI)
+      // const amount_paid_after_payment =
+      //   console.log(amount - reduced_amount_to_be_paid);
+      console.log(
+        bank_name,
+        ' ',
+        borrower_name,
+        ' ',
+        Math.min(amount, amount_paid),
+        ' ',
+        updated_no_of_emis_left
+      );
+    } else {
+      const no_of_emis_left = total_emi - emi_no;
+      const emi = Math.ceil(amount / total_emi);
+      amount_paid = Math.min(amount, emi * emi_no);
+      console.log(
+        bank_name,
+        ' ',
+        borrower_name,
+        ' ',
+        amount_paid,
+        ' ',
+        no_of_emis_left
+      );
+    }
+  }
 };
 
 const getLoansByBorrowerName = (borrower_name) => {
