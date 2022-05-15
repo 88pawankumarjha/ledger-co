@@ -114,6 +114,18 @@ IDIDI Dale 3652 4
 UON Shelly 15856 3
 MBI Harry 9044 10
 
+SAMPLE INPUT-OUTPUT 3
+
+INPUT:
+LOAN MBI Dale 5000 4 5
+PAYMENT MBI Dale 1000 0
+BALANCE MBI Dale 0
+BALANCE MBI Dale 18
+
+OUTPUT:
+MBI Dale 1000 40
+MBI Dale 3250 22
+
 Input needs to be read from a text file, and output should be printed to console. Your program should execute and take the location to the test file as parameter.
 
 You can refer our help documents here - https://help.geektrust.com

@@ -4,9 +4,9 @@
   "description": "geektrust-project",
   "main": "index.js",
   "scripts": {
-    "start": "node geektrust.js ./sample_input/input1.txt",
+    "start": "node geektrust.js",
     "test": "mocha",
-    "watch": "watch 'node geektrust.js ./sample_input/input2.txt'"
+    "watch": "watch 'node geektrust.js ./sample_input/input3.txt'"
   },
   "author": "geektrust",
   "license": "ISC",
