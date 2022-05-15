@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node geektrust.js ./sample_input/input1.txt",
-    "test": "mocha"
+    "test": "mocha",
+    "watch": "watch 'node geektrust.js ./sample_input/input1.txt'"
   },
   "author": "geektrust",
   "license": "ISC",
   "dependencies": {
-    "mocha": "^10.0.0"
+    "mocha": "^10.0.0",
+    "watch": "^1.0.2"
   }
 }
