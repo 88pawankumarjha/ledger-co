@@ -27,7 +27,7 @@ npm start
 The `npm run watch` command runs the test from sample input2 and runs it is watch mode. This is useful while development to continuously watch the changes.
 
 ```
-npm start
+npm run watch
 ```
 
 ## More details about the challenge
