@@ -33,90 +33,68 @@ const processLoan = (inputLine) => {
 };
 
 const processPayment = (inputLine) => {
-  // const [payment, bank_name, borrower_name, lump_sum_amount, emi_no] = inputLine.split(" ")
   payments.push(inputLine);
 };
 
-const processBalance = (inputLine) => {
-  const [, bank_name, borrower_name, emi_no] = inputLine.split(' ');
-  const [, , , principal, no_of_years, rate_of_interest] =
-    getLoansByBorrowerName(borrower_name).split(' ');
-
-  let paymentsByBorrower = [];
-  paymentsByBorrower = getPaymentsByBorrowerName(borrower_name);
-  const interest = (principal * no_of_years * rate_of_interest) / 100;
-  const amount = parseInt(interest) + parseInt(principal);
-  const total_emi = no_of_years * 12;
-
-  if (paymentsByBorrower.length == 0) {
-    const no_of_emis_left = total_emi - emi_no;
-    const emi = Math.ceil(amount / total_emi);
-    const amount_paid = Math.min(amount, emi * emi_no);
-    console.log(
-      bank_name,
-      ' ',
-      borrower_name,
-      ' ',
-      amount_paid,
-      ' ',
-      no_of_emis_left
-    );
-  } else {
-    const [, , borrower_name, lump_sum_amount, payment_emi_no] =
-      paymentsByBorrower[0].split(' ');
-    const emi = Math.ceil(amount / total_emi);
-    let amount_paid = '';
-    if (payment_emi_no <= emi_no) {
-      const amount_paid_before_payment = emi * payment_emi_no;
-      const reduced_amount_to_be_paid =
-        amount - (amount_paid_before_payment + parseInt(lump_sum_amount));
-      let updated_no_of_emis_left = Math.ceil(reduced_amount_to_be_paid / emi);
-      amount_paid =
-        amount_paid_before_payment +
-        parseInt(lump_sum_amount) +
-        emi * (emi_no - payment_emi_no);
-      updated_no_of_emis_left = Math.ceil((amount - amount_paid) / emi);
-
-      // const amount_paid_after_payment =
-      //   console.log(amount - reduced_amount_to_be_paid);
-      console.log(
-        bank_name,
-        ' ',
-        borrower_name,
-        ' ',
-        Math.min(amount, amount_paid),
-        ' ',
-        updated_no_of_emis_left
-      );
-    } else {
-      const no_of_emis_left = total_emi - emi_no;
-      const emi = Math.ceil(amount / total_emi);
-      amount_paid = Math.min(amount, emi * emi_no);
-      console.log(
-        bank_name,
-        ' ',
-        borrower_name,
-        ' ',
-        amount_paid,
-        ' ',
-        no_of_emis_left
-      );
-    }
-  }
-};
-
-const getLoansByBorrowerName = (borrower_name) => {
+const getLoansByBorrowerName = (brn) => {
   let identifiedLoan = '';
   loans.some((v) => {
-    v.includes(borrower_name) && (identifiedLoan = v);
+    v.includes(brn) && (identifiedLoan = v);
   });
   return identifiedLoan;
 };
 
-const getPaymentsByBorrowerName = (borrower_name) => {
+const getpaymByBorrName = (brn) => {
   let identifiedPayments = [];
   payments.some((v) => {
-    v.includes(borrower_name) && identifiedPayments.push(v);
+    v.includes(brn) && identifiedPayments.push(v);
   });
   return identifiedPayments;
+};
+
+const beforePayment = (tot_emi, emi_no, amt, bn, brn) => {
+  const no_of_emis_left = tot_emi - emi_no;
+  const emi = Math.ceil(amt / tot_emi);
+  const amt_paid = Math.min(amt, emi * emi_no);
+  printSolution(bn, brn, amt_paid, no_of_emis_left);
+};
+
+const afterSinglePayment = (emi, pay_e_n, amt, lamt, emi_no, bn, brn) => {
+  const amt_paid_before_payment = emi * pay_e_n;
+  const reduced_amt_to_be_paid =
+    amt - (amt_paid_before_payment + parseInt(lamt));
+  let upd_emi_left = Math.ceil(reduced_amt_to_be_paid / emi);
+  const amt_paid =
+    amt_paid_before_payment + parseInt(lamt) + emi * (emi_no - pay_e_n);
+  upd_emi_left = Math.ceil((amt - amt_paid) / emi);
+  printSolution(bn, brn, Math.min(amt, amt_paid), upd_emi_left);
+};
+
+const processBalance = (inputLine) => {
+  const [, bn, brn, emi_no] = inputLine.split(' ');
+  const [, , , p, n, r] = getLoansByBorrowerName(brn).split(' ');
+  const paymByBorr = getpaymByBorrName(brn);
+  const interest = (p * n * r) / 100;
+  const amt = interest + parseInt(p);
+  const tot_emi = n * 12;
+  if (paymByBorr.length === 0) {
+    // no payments
+    beforePayment(tot_emi, emi_no, amt, bn, brn);
+  } else {
+    const [, , brn, lamt, pay_e_n] = paymByBorr[0].split(' ');
+    const emi = Math.ceil(amt / tot_emi);
+    if (pay_e_n <= emi_no) {
+      // after payment
+      afterSinglePayment(emi, pay_e_n, amt, lamt, emi_no, bn, brn);
+    } else if (paymByBorr.length === 1) {
+      // before payment
+      beforePayment(tot_emi, emi_no, amt, bn, brn);
+    } else {
+      console.log('Multiple payments not supported');
+    }
+  }
+};
+
+const printSolution = (bn, brn, a, e) => {
+  console.log(bn, ' ', brn, ' ', a, ' ', e);
 };
